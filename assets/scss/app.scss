@@ -1,25 +1,9 @@
 $fa-font-path: "../../static/webfonts";
-@import "/node_modules/@fortawesome/fontawesome-free/scss/regular";
-@import "/node_modules/@fortawesome/fontawesome-free/scss/solid";
+@import "~vuetify/src/styles/settings";
+@import "~vuetify/dist/vuetify.min";
 @import "assets/scss/base";
 @import "assets/scss/mixins";
 @import "assets/scss/theme";
-
-
-:root {
-  background: linear-gradient(#16161d, #1f1f3a, #3b2f4a);
-  color: $f;
-
-  #app, html, body, #__nuxt, #__layout {
-    @apply w-full h-full flex justify-center items-center;
-    background: linear-gradient(#16161d, #1f1f3a, #3b2f4a);
-    color: $f;
-  }
-}
-
-#app {
-  @apply px-8 py-12 lg:px-16 lg:py-16;
-}
 
 html, body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -90,45 +74,5 @@ html, body {
 
   .invalid-feedback {
     color: #ff0000;
-  }
-
-  .btn-label {
-    position: relative;
-    left: -1.5rem;
-    display: inline-block;
-    padding: 6px 12px;
-    background: rgba(0, 0, 0, 0.15);
-    border-radius: 3px 0 0 3px;
-  }
-
-  .btn-labeled {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-
-  .input-field {
-    @apply text-gray-600
-    dark:text-gray-400
-    focus:outline-none
-    focus:border-blue-700
-    dark:focus:border-blue-700
-    dark:border-gray-700
-    dark:bg-gray-700
-    bg-white
-    font-normal
-    w-64
-    h-10
-    flex
-    items-center
-    pl-12
-    text-sm
-    border-gray-300
-    rounded
-    border
-    shadow;
-  }
-
-  .label {
-    @apply text-sm font-bold leading-tight tracking-normal mb-2;
   }
 }

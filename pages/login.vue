@@ -1,76 +1,47 @@
 <template>
-  <form id="login-form" :class="error ? 'border border-red-500' : ''">
-    <div class="headline">Welcome!</div>
-    <span class="subline">
-      Log into your account to get started!
-      <br />
-      If you don't have an account yet, you're currently out of luck.
-      <br />
-      Public registrations will be open soon.
-    </span>
-    <div class="flex flex-col flex-around justify-center items-center gap-6">
-      <div class="flex flex-col">
-        <label for="username" class="label uppercase font-extrabold text-blue-400"> Username </label>
-        <div class="relative">
-          <div class="absolute text-gray-600 dark:text-gray-400 flex items-center pl-4 h-full cursor-pointer">
-            <i class="fas fa-user text-white"></i>
-          </div>
-          <input
-            id="username"
-            v-model="username"
-            class="input-field"
-            type="text"
-            placeholder="Enter username"
-            @input="error = false"
-          />
-        </div>
-      </div>
-      <div class="flex flex-col">
-        <label for="password" class="label uppercase font-extrabold text-blue-400"> Password </label>
-        <div class="relative">
-          <div class="absolute text-gray-600 dark:text-gray-400 flex items-center pl-4 h-full cursor-pointer">
-            <i class="fas fa-passport text-white"></i>
-          </div>
-          <input
-            id="password"
-            v-model="password"
-            class="input-field"
-            type="password"
-            placeholder="Enter password"
-            @input="error = false"
-          />
-        </div>
-      </div>
-
-      <transition name="fade" mode="out-in">
-        <span v-show="error" class="text-red-500 text-center py-1">
-          There was an issue while logging you in...
-          <br />
-          Please check your credentials and try again.
-        </span>
-      </transition>
-      <button :disabled="disabled" :class="disabled ? 'bg-gray-700 btn-disabled' : 'bg-green-500 btn'" @click.prevent="submit">
-        <transition name="fade" mode="out-in">
-          <span v-show="loading" key="loading"> <i class="fas fa-spinner fa-spin"></i></span>
-        </transition>
-        <span v-show="!loading">Login</span>
-      </button>
-    </div>
-  </form>
+  <v-row align="center" justify="center">
+    <v-col cols="12" sm="4" align-self="center">
+      <v-card elevation="10" :loading="loading" outlined shaped>
+        <v-card-title> Welcome</v-card-title>
+        <v-card-subtitle> This page is being reworked. Please be patient until it's finished.</v-card-subtitle>
+        <v-card-text>
+          <v-form ref="form" v-model="valid">
+            <v-text-field v-model="username" :rules="rules" label="Username" required></v-text-field>
+            <v-text-field v-model="password" type="password" :rules="rules" label="Password" required></v-text-field>
+          </v-form>
+          <transition name="fade" mode="out-in">
+            <p v-show="error" class="red--text font-weight-bold">There was an issue while logging you in. Please try again.</p>
+          </transition>
+        </v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn :disabled="!valid" :loading="loading" outlined color="primary" @click="submit">
+            <transition name="fade" mode="out-in">
+              <template v-if="!success"><span>Login</span></template>
+              <template v-else>
+                <v-icon color="green" dark> mdi-check-outline </v-icon>
+              </template>
+            </transition>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator';
 
 @Component({
   name: 'LoginForm',
-  layout: 'login',
   transition: 'default'
 })
 export default class LoginForm extends Vue {
   username = '';
   password = '';
+  rules = [(v) => !!v || 'This field is required'];
+  valid = false;
   error = false;
   loading = false;
+  success = false;
 
   get disabled() {
     return this.error || this.password === '' || this.username === '';
@@ -92,16 +63,3 @@ export default class LoginForm extends Vue {
   }
 }
 </script>
-<style>
-.headline {
-  @apply text-3xl underline pt-2 font-bold text-gray-200 max-w-sm text-center;
-}
-
-.subline {
-  @apply max-w-sm text-center text-gray-500 text-sm lg:text-lg;
-}
-
-#login-form {
-  @apply shadow-xl py-3 px-5 lg:px-3 bg-gray-800 rounded gap-6 flex flex-col justify-around items-center min-h-1/3 min-w-1/3;
-}
-</style>

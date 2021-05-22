@@ -1,29 +1,37 @@
 <template>
-  <div id="app">
-    <transition name="fade" mode="out-in">
-      <span v-if="$route.name !== 'index'" title="Back" class="nav-item nav-back grow" @click="$router.go(-1)">
-        <i class="fas fa-chevron-left pr-1"></i>
-      </span>
-    </transition>
-    <!--
-    <input
-      v-model="stars"
-      type="checkbox"
-      class="top-8 right-8 fixed"
-      name="stars-button"
-      title="Sterne einblenden (Animationen können die Webseite verlangsamen)"
-    />
-    -->
-    <span class="nav-item nav-menu grow">
-      <i title="Menu" class="fas fa-bars" @click="visibleSidebar = !visibleSidebar"></i>
-    </span>
-    <div title="Logoff" class="nav-item top-4 right-4 grow hover:text-red-500" @click="logout">
-      <i class="fas fa-power-off"></i>
-    </div>
-    <div class="w-full h-full flex justify-center items-center" @click="hide">
-      <Nuxt keep-alive :keep-alive-props="{ max: 10 }" :class="visibleSidebar" />
-    </div>
-  </div>
+  <v-app id="app" dark>
+    <v-app-bar class="header" app color="black" collapse-on-scroll elevation="20">
+      <v-avatar :color="$vuetify.breakpoint.smAndDown ? 'grey darken-1' : 'transparent'" size="32"></v-avatar>
+
+      <v-tabs centered class="ml-n9" color="white lighten-1">
+        <v-tab v-for="link in links" :key="link">
+          {{ link }}
+        </v-tab>
+      </v-tabs>
+
+      <v-avatar class="hidden-sm-and-down" color="grey darken-1 shrink" size="32"></v-avatar>
+    </v-app-bar>
+
+    <v-main>
+      <v-container fill-height fluid>
+        <!--
+        <transition name="fade" mode="out-in">
+          <span v-if="$route.name !== 'index'" title="Back" class="nav-item nav-back grow" @click="$router.go(-1)">
+            <i class="fas fa-chevron-left pr-1"></i>
+          </span>
+        </transition>
+        <div title="Logoff" class="nav-item top-4 right-4 grow text-red-900 hover:text-red-500" @click="logout">
+          <i class="fas fa-power-off"></i>
+        </div>
+        -->
+        <Nuxt keep-alive :keep-alive-props="{ max: 10 }" :class="visibleSidebar" />
+      </v-container>
+    </v-main>
+
+    <v-footer app>
+      <!-- -->
+    </v-footer>
+  </v-app>
 </template>
 
 <script lang="ts">
@@ -39,6 +47,7 @@ import { Component, Vue } from 'nuxt-property-decorator';
 export default class V2Layout extends Vue {
   visibleSidebar: boolean = false;
   stars: boolean = false;
+  links = ['Foo', 'Bar'];
 
   mounted() {
     this.$sm.startSession();
@@ -46,10 +55,6 @@ export default class V2Layout extends Vue {
 
   beforeDestroy() {
     this.$sm.stopSession();
-  }
-
-  hide(): void {
-    this.visibleSidebar = false;
   }
 
   async logout() {
@@ -60,47 +65,10 @@ export default class V2Layout extends Vue {
 }
 </script>
 
-<style>
-.nav-item {
-  @apply flex
-  justify-center
-  items-center
-  rounded-full
-  opacity-20
-  hover:opacity-100
-  fixed
-  cursor-pointer;
-}
-
-.nav-menu {
-  @apply w-6 h-6 lg:w-12
-  lg:h-12
-  fixed
-  top-4
-  left-4
-  text-xl
-  lg:border
-  lg:text-2xl
-  text-gray-400;
-}
-
-.nav-back {
-  @apply w-8
-  h-8
-  fixed
-  border
-  border-2 border-gray-700
-  text-gray-200
-  left-4
-  top-1/2
-  bg-gray-600;
-}
-
-.grow {
-  @apply transition
-  duration-200
-  ease-out
-  transform
-  hover:scale-110;
+<style lang="scss">
+.header {
+  .v-toolbar__content {
+    border-bottom: 0.5px solid white;
+  }
 }
 </style>

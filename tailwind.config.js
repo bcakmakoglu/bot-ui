@@ -1,4 +1,9 @@
 module.exports = {
+  mode: 'jit',
+  prefix: 'tw-',
+  corePlugins: {
+    preflight: false
+  },
   purge: [
     './components/**/*.{vue,js}',
 

@@ -33,7 +33,8 @@
       "@nuxt/types",
       "@nuxtjs/apollo/types",
       "@nuxtjs/toast",
-      "@vercel/node"
+      "@vercel/node",
+      "@nuxtjs/vuetify"
     ]
   },
   "exclude": [

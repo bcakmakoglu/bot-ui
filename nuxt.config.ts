@@ -103,7 +103,15 @@ const config = {
     }
   },
 
-  toast: NuxtToasterConfig
+  toast: NuxtToasterConfig,
+
+  vuetify: {
+    treeShake: true,
+    theme: {
+      dark: true
+    },
+    customVariables: ['~/assets/scss/variables.scss']
+  } as any
 } as NuxtConfig;
 
 // some dev only options
