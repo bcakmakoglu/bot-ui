@@ -1,38 +1,6 @@
+/* purgecss start ignore */
 @tailwind base;
 @tailwind components;
+/* purgecss end ignore */
 @tailwind utilities;
 @tailwind screens;
-
-@variants hover {
-  .btn {
-    @apply mx-2
-    my-2
-    transition
-    duration-150
-    ease-in-out
-    focus:outline-none
-    rounded
-    text-white
-    cursor-pointer
-    border border-gray-300
-    hover:bg-gray-300
-    hover:text-black
-    px-6
-    py-2;
-  }
-
-  .btn-disabled {
-    @apply mx-2
-    my-2
-    pointer-events-none
-    cursor-not-allowed
-    transition
-    duration-150
-    ease-in-out
-    rounded
-    text-gray-500
-    border border-gray-500
-    px-6
-    py-2;
-  }
-}
