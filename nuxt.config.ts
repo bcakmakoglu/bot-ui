@@ -20,7 +20,7 @@ const config = {
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
   ssr,
 
-  telemetry: false,
+  telemetry: !dev,
 
   // Target (https://go.nuxtjs.dev/config-target)
   target,
@@ -29,7 +29,7 @@ const config = {
   head: NuxtHeaderConfig,
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
-  css: ['@fortawesome/fontawesome-free/css/all.css'],
+  css: [],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: NuxtPluginsConfig,
@@ -84,7 +84,7 @@ const config = {
 
   watchers: {
     webpack: {
-      aggregateTimeout: 300,
+      aggregateTimeout: 500,
       poll: 1000
     }
   },
@@ -106,7 +106,7 @@ const config = {
   toast: NuxtToasterConfig,
 
   vuetify: {
-    treeShake: true,
+    treeShake: process.env.TARGET_STAGE !== 'dev',
     theme: {
       dark: true
     },

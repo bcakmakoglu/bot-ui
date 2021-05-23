@@ -16,7 +16,6 @@
     "test": "exit 0"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.3",
     "@nuxt/typescript-build": "^2.1.0",
     "@nuxt/typescript-runtime": "^2.1.0",
     "@nuxtjs/apollo": "^4.0.1-rc.5",
