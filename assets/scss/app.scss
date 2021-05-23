@@ -8,6 +8,7 @@ $fa-font-path: "../../static/webfonts";
 @import "assets/scss/theme";
 
 html, body {
+  background: map-get($material-dark, "background");
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
