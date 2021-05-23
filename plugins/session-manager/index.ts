@@ -24,8 +24,9 @@ declare module '@nuxt/types' {
   }
 }
 
-const sessionManagerPlugin: Plugin = ({ $apolloHelpers, $toast, redirect, store, $config }, inject: Inject) => {
+const sessionManagerPlugin: Plugin = ({ app, $apolloHelpers, $toast, redirect, store, $config }, inject: Inject) => {
   const sessionManager = new SessionManager(
+    app.apolloProvider.defaultClient,
     $apolloHelpers,
     $toast,
     redirect,

@@ -1,5 +1,6 @@
 mutation refresh_token {
   refreshToken {
     accessToken
+    expires
   }
 }

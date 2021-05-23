@@ -1,16 +1,14 @@
 import { ApolloHelpers } from '@nuxtjs/apollo';
 import { timer, Subscription } from 'rxjs';
-import { execute, makePromise } from 'apollo-link';
-import { createHttpLink } from 'apollo-link-http';
-import fetch from 'node-fetch';
 import { Store } from 'vuex';
 import { Toasted } from 'vue-toasted/types';
 import { Context } from '@nuxt/types';
+import { ApolloClient } from 'apollo-client';
 import refreshToken from './refresh_token.graphql';
 import login from './login.graphql';
-import link from '~/utils/httplink';
 
 export class SessionManager {
+  $apollo: ApolloClient<any>;
   $apolloHelpers: ApolloHelpers;
   $toast: Toasted;
   redirect: Context['redirect'];
@@ -20,6 +18,7 @@ export class SessionManager {
   endpoint: string = 'http://localhost:8080/v1/graphql';
 
   constructor(
+    $apollo,
     $apolloHelpers: ApolloHelpers,
     $toast: Toasted,
     redirect: Context['redirect'],
@@ -27,6 +26,7 @@ export class SessionManager {
     refreshInterval: number,
     endpoint: string
   ) {
+    this.$apollo = $apollo;
     this.$apolloHelpers = $apolloHelpers;
     this.$toast = $toast;
     this.redirect = redirect;
@@ -38,7 +38,7 @@ export class SessionManager {
   async login(username: string, password: string): Promise<boolean> {
     try {
       const options = {
-        query: login,
+        mutation: login,
         variables: {
           data: {
             username,
@@ -46,27 +46,26 @@ export class SessionManager {
           }
         }
       };
-      const response = await makePromise(
-        execute(
-          createHttpLink({
-            uri: this.endpoint,
-            fetch: fetch as any
-          }),
-          options
-        )
-      );
-      await this.$apolloHelpers.onLogin(response.data?.login.accessToken);
+      const {
+        data: {
+          login: { accessToken, expires }
+        }
+      } = await this.$apollo.mutate(options);
+      await this.$store.dispatch('user/login', { id: '0', username, roles: ['user'], expires });
+      await this.$apolloHelpers.onLogin(accessToken);
       return true;
     } catch (e) {
-      console.log(e);
+      console.debug(e);
     }
 
     return false;
   }
 
   startSession() {
-    const expiry = (this.refreshInterval - 60) * 1000;
-    this.refreshSub = timer(expiry, expiry).subscribe(() => this.refreshSession());
+    const expiry = (this.refreshInterval) * 1000;
+    const lastRefreshDif = this.$store.getters['user/me'].lastRefresh - Date.now() - expiry;
+    const start = lastRefreshDif < expiry && lastRefreshDif > 0 ? lastRefreshDif : expiry;
+    this.refreshSub = timer(start, expiry).subscribe(() => this.refreshSession());
     return this;
   }
 
@@ -78,23 +77,29 @@ export class SessionManager {
   async refreshSession() {
     try {
       const options = {
-        query: refreshToken,
+        mutation: refreshToken,
         context: {
           headers: {
             authorization: `Bearer ${this.$apolloHelpers.getToken()}`
           }
         }
       };
-      const response = await makePromise(execute(link, options));
-      if (response.data?.refresh_token.accessToken) {
-        const token = response.data?.refresh_token.accessToken;
-        return this.$apolloHelpers.onLogin(token);
+      const {
+        data: {
+          refresh_token: { accessToken, expires }
+        }
+      } = await this.$apollo.mutate(options);
+      if (accessToken) {
+        this.$store.commit('user/refresh');
+        this.$store.commit('user/expiry', expires);
+        return this.$apolloHelpers.onLogin(accessToken);
       }
     } catch (e) {
-      console.log(e);
-      this.$toast.error('There was an issue. We will have to log you out, sorry.');
-      await this.$apolloHelpers.onLogout();
-      await this.redirect('/login');
+      console.debug(e);
     }
+
+    this.$toast.error('There was an issue. We will have to log you out, sorry.');
+    await this.$apolloHelpers.onLogout();
+    await this.redirect('/login');
   }
 }
