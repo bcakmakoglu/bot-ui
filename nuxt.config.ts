@@ -111,7 +111,20 @@ const config = {
       dark: true
     },
     customVariables: ['~/assets/scss/variables.scss']
-  } as any
+  } as any,
+  purgeCSS: {
+    mode: 'webpack',
+    enabled: true,
+    paths: ['components/**/*.vue', 'layouts/**/*.vue', 'pages/**/*.vue', 'plugins/**/*.ts'],
+    styleExtensions: ['.css', '.scss'],
+    whitelist: ['body', 'html', 'nuxt-progress'],
+    extractors: [
+      {
+        extractor: (content) => content.match(/[A-z0-9-:\\/]+/g) || [],
+        extensions: ['html', 'vue', 'js', 'ts']
+      }
+    ]
+  }
 } as NuxtConfig;
 
 // some dev only options
