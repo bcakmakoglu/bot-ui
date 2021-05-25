@@ -3,7 +3,7 @@ export const NuxtBuildModules = [
   '@nuxt/typescript-build',
   '@nuxt/components',
   '@nuxtjs/vuetify',
-  '@nuxtjs/tailwindcss'
+  'nuxt-purgecss'
 ];
 
 export const NuxtModules = ['@nuxtjs/proxy', '@nuxtjs/apollo', '@nuxtjs/toast'];
