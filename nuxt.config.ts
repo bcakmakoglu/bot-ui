@@ -115,9 +115,18 @@ const config = {
   purgeCSS: {
     mode: 'webpack',
     enabled: true,
-    paths: ['components/**/*.vue', 'layouts/**/*.vue', 'pages/**/*.vue', 'plugins/**/*.ts'],
+    whitelistPatterns: () => [/^v-((?!application).)*$/, /^\.theme--dark*/, /.*-transition/, /.*-fade/, /.*-slide/],
+    paths: [
+      'components/**/*.vue',
+      'layouts/**/*.vue',
+      'pages/**/*.vue',
+      'plugins/**/*.ts',
+      'node_modules/@nuxtjs/vuetify/**/*.ts',
+      'node_modules/@nuxt/vue-app/template/**/*.html',
+      'node_modules/@nuxt/vue-app/template/**/*.vue'
+    ],
     styleExtensions: ['.css', '.scss'],
-    whitelist: ['body', 'html', 'nuxt-progress'],
+    whitelist: ['body', 'html', 'nuxt-progress', 'v-application', 'v-application--wrap'],
     extractors: [
       {
         extractor: (content) => content.match(/[A-z0-9-:\\/]+/g) || [],
