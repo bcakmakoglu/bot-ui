@@ -133,7 +133,7 @@ const config = {
     ],
     whitelistPatternsChildren: [/^v-((?!application).)*$/, /^theme--dark*/],
     styleExtensions: ['.css'],
-    whitelist: ['body', 'html', 'nuxt-progress', 'v-application', 'v-application--wrap'],
+    whitelist: ['body', 'html', 'nuxt-progress', 'v-card', 'v-application', 'v-application--wrap'],
     extractors: [
       {
         extractor: (content) => content.match(/[A-z0-9-:\\/]+/g) || [],
