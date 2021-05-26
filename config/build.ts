@@ -4,8 +4,8 @@ export const NuxtBuildConfig: NuxtConfig['build'] = {
   transpile: ['vuex-module-decorators'],
   plugins: [],
   extractCSS: true,
-  postcss: true,
-  loadingScreen: true,
+  analyze: process.env.TARGET_STAGE === 'dev',
+  loadingScreen: process.env.TARGET_STAGE === 'dev',
   indicator: true,
   splitChunks: {
     commons: true,
@@ -27,15 +27,7 @@ export const NuxtBuildConfig: NuxtConfig['build'] = {
       if (vue) {
         vue.transformAssetUrls = {
           img: 'src',
-          image: 'xlink:href',
-          'b-avatar': 'src',
-          'b-img': 'src',
-          'b-img-lazy': ['src', 'blank-src'],
-          'b-card': 'img-src',
-          'b-card-img': 'src',
-          'b-card-img-lazy': ['src', 'blank-src'],
-          'b-carousel-slide': 'img-src',
-          'b-embed': 'src'
+          image: 'xlink:href'
         };
       }
     }
