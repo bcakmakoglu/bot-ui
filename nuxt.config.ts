@@ -10,7 +10,7 @@ import {
   NuxtToasterConfig
 } from './config';
 
-const dev = process.env.TARGET_STAGE === 'dev' || true;
+const dev = process.env.TARGET_STAGE === 'dev' || false;
 const ssr = process.env.SSR === 'true' || false;
 const target = process.env.RENDER_TARGET || 'static';
 
@@ -108,7 +108,7 @@ const config = {
   toast: NuxtToasterConfig,
 
   vuetify: {
-    treeShake: process.env.TARGET_STAGE !== 'dev',
+    treeShake: !dev,
     customVariables: ['~/assets/scss/variables.scss'],
     optionsPath: './vuetify.options.js',
     defaultAssets: false
@@ -141,6 +141,7 @@ const config = {
       }
     ]
   },
+
   webfontloader: {
     google: {
       families: ['Roboto']
