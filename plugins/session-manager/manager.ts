@@ -62,7 +62,7 @@ export class SessionManager {
   }
 
   startSession() {
-    const expiry = (this.refreshInterval) * 1000;
+    const expiry = this.refreshInterval * 1000;
     const lastRefreshDif = this.$store.getters['user/me'].lastRefresh - Date.now() - expiry;
     const start = lastRefreshDif < expiry && lastRefreshDif > 0 ? lastRefreshDif : expiry;
     this.refreshSub = timer(start, expiry).subscribe(() => this.refreshSession());

@@ -107,14 +107,15 @@ const config = {
 
   vuetify: {
     treeShake: process.env.TARGET_STAGE !== 'dev',
-    theme: {
-      dark: true
-    },
-    customVariables: ['~/assets/scss/variables.scss']
+    customVariables: ['~/assets/scss/variables.scss'],
+    optionsPath: './vuetify.options.js',
+    defaultAssets: {
+      icons: false
+    }
   } as any,
   purgeCSS: {
     mode: 'webpack',
-    enabled: true,
+    enabled: false,
     whitelistPatterns: () => [/^v-((?!application).)*$/, /^\.theme--dark*/, /.*-transition/, /.*-fade/, /.*-slide/],
     paths: [
       'components/**/*.vue',

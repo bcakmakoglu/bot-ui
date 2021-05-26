@@ -26,10 +26,10 @@
             <transition name="fade" mode="out-in">
               <template v-if="!success && !loading && !error"><span>Login</span></template>
               <template v-else-if="success">
-                <v-icon color="green" dark> mdi-check-outline</v-icon>
+                <v-icon color="green" dark>{{ check }}</v-icon>
               </template>
               <template v-else>
-                <v-icon color="red" dark>mdi-cancel</v-icon>
+                <v-icon color="red" dark>{{ cancel }}</v-icon>
               </template>
             </transition>
           </v-btn>
@@ -39,6 +39,7 @@
   </v-row>
 </template>
 <script lang="ts">
+import { mdiCancel, mdiCheckOutline } from '@mdi/js';
 import { Component, Vue } from 'nuxt-property-decorator';
 import { timer } from 'rxjs';
 
@@ -48,6 +49,8 @@ import { timer } from 'rxjs';
   transition: 'default'
 })
 export default class LoginForm extends Vue {
+  cancel = mdiCancel;
+  check = mdiCheckOutline;
   username = '';
   password = '';
   rules = [(v) => !!v || 'This field is required'];
