@@ -4,6 +4,7 @@ export const NuxtBuildConfig: NuxtConfig['build'] = {
   transpile: ['vuex-module-decorators'],
   plugins: [],
   extractCSS: true,
+  postcss: true,
   analyze: process.env.TARGET_STAGE === 'dev',
   loadingScreen: process.env.TARGET_STAGE === 'dev',
   indicator: true,

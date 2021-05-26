@@ -25,6 +25,8 @@ const config = {
   // Target (https://go.nuxtjs.dev/config-target)
   target,
 
+  modern: !dev,
+
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: NuxtHeaderConfig,
 
@@ -109,31 +111,40 @@ const config = {
     treeShake: process.env.TARGET_STAGE !== 'dev',
     customVariables: ['~/assets/scss/variables.scss'],
     optionsPath: './vuetify.options.js',
-    defaultAssets: {
-      icons: false
-    }
+    defaultAssets: false
   } as any,
+
   purgeCSS: {
     mode: 'webpack',
-    enabled: false,
-    whitelistPatterns: () => [/^v-((?!application).)*$/, /^\.theme--dark*/, /.*-transition/, /.*-fade/, /.*-slide/],
+    enabled: !dev,
+    whitelistPatterns: () => [
+      /^v-((?!application).)*$/,
+      /^\.theme--dark*/,
+      /.*-transition/,
+      /.*-fade/,
+      /.*-slide/,
+      /col*/,
+      /row*/
+    ],
     paths: [
-      'components/**/*.vue',
-      'layouts/**/*.vue',
-      'pages/**/*.vue',
-      'plugins/**/*.ts',
       'node_modules/@nuxtjs/vuetify/**/*.ts',
       'node_modules/@nuxt/vue-app/template/**/*.html',
       'node_modules/@nuxt/vue-app/template/**/*.vue'
     ],
-    styleExtensions: ['.css', '.scss'],
+    whitelistPatternsChildren: [/^v-((?!application).)*$/, /^theme--dark*/],
+    styleExtensions: ['.css'],
     whitelist: ['body', 'html', 'nuxt-progress', 'v-application', 'v-application--wrap'],
     extractors: [
       {
         extractor: (content) => content.match(/[A-z0-9-:\\/]+/g) || [],
-        extensions: ['html', 'vue', 'js', 'ts']
+        extensions: ['html', 'vue', 'js']
       }
     ]
+  },
+  webfontloader: {
+    google: {
+      families: ['Roboto']
+    }
   }
 } as NuxtConfig;
 

@@ -31,6 +31,7 @@
     "js-cookie": "^2.2.1",
     "node-fetch": "^2.6.1",
     "nuxt": "^2.15.3",
+    "nuxt-webfontloader": "^1.1.0",
     "vuex-persistedstate": "^4.0.0-beta.3"
   },
   "devDependencies": {
