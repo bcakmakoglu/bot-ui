@@ -186,6 +186,11 @@ const config = {
     }
   },
 
+  sentry: {
+    dsn: process.env.SENTRY_DSN,
+    lazy: true
+  },
+
   pwa: {
     icon: false, // disables the icon module
     manifest: {

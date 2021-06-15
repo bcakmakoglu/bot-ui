@@ -13,5 +13,6 @@ export const NuxtModules = [
   '@nuxtjs/toast',
   'nuxt-webfontloader',
   '@nuxtjs/axios',
-  '@nuxtjs/auth-next'
+  '@nuxtjs/auth-next',
+  '@nuxtjs/sentry'
 ];
