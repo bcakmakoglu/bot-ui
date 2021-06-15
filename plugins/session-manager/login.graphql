@@ -1,6 +1,0 @@
-mutation login($data: LoginData!) {
-  login(data: $data) {
-    accessToken
-    expires
-  }
-}

@@ -31,6 +31,7 @@
       "vue-apollo/types",
       "vue-cli-plugin-apollo/types",
       "@nuxt/types",
+      "@nuxtjs/auth-next",
       "@nuxtjs/apollo/types",
       "@nuxtjs/toast",
       "@vercel/node",
@@ -44,6 +45,7 @@
     "./types/types.ts"
   ],
   "files": [
+    "index.d.ts",
     "graphql.d.ts",
     "plugins/session-manager/index.ts"
   ]

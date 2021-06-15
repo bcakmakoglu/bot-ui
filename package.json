@@ -19,6 +19,8 @@
     "@nuxt/typescript-build": "^2.1.0",
     "@nuxt/typescript-runtime": "^2.1.0",
     "@nuxtjs/apollo": "^4.0.1-rc.5",
+    "@nuxtjs/auth-next": "5.0.0-1622918202.e815752",
+    "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/proxy": "^2.1.0",
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/toast": "^3.3.1",
@@ -50,6 +52,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",
+    "consola": "^2.15.3",
     "core-js": "^3.9.1",
     "eslint": "^7.22.0",
     "eslint-config-prettier": "^8.1.0",
@@ -68,6 +71,6 @@
     "vue-jest": "^3.0.4"
   },
   "resolutions": {
-    "@nuxtjs/vuetify/**/sass": "1.32.12"
+    "@nuxtjs/vuetify/**/sass": "1.32.13"
   }
 }

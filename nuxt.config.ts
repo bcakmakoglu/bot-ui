@@ -1,14 +1,6 @@
 import type { NuxtConfig } from '@nuxt/types';
-import {
-  NuxtBuildConfig,
-  NuxtBuildModules,
-  NuxtModules,
-  NuxtHeaderConfig,
-  NuxtPluginsConfig,
-  NuxtRouterConfig,
-  NuxtServerMiddlewareConfig,
-  NuxtToasterConfig
-} from './config';
+import { Strategy } from '@nuxtjs/auth-next';
+import { NuxtBuildConfig, NuxtBuildModules, NuxtModules, NuxtHeaderConfig, NuxtRouterConfig, NuxtToasterConfig } from './config';
 
 const dev = process.env.TARGET_STAGE === 'dev' || false;
 const ssr = process.env.SSR === 'true' || false;
@@ -34,7 +26,11 @@ const config = {
   css: [],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: NuxtPluginsConfig,
+  plugins: [
+    {
+      src: '~/plugins/vuex-persisted-state/persisted.ts'
+    }
+  ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   // if you're using true instead of paths make sure you understand that component names are created in accordance to directory structure
@@ -97,7 +93,7 @@ const config = {
     stage: process.env.TARGET_STAGE || 'dev'
   },
 
-  serverMiddleware: NuxtServerMiddlewareConfig,
+  serverMiddleware: [],
 
   apollo: {
     clientConfigs: {
@@ -145,6 +141,48 @@ const config = {
   webfontloader: {
     google: {
       families: ['Roboto']
+    }
+  },
+
+  axios: {
+    baseURL: process.env.GRAPHQL_ENDPOINT // Used as fallback if no runtime config is provided
+  },
+
+  auth: {
+    defaultStrategy: 'hasura',
+    strategies: {
+      hasura: {
+        enabled: true,
+        name: 'hasura',
+        scheme: '~/auth/schemes/hasura-scheme',
+        token: {
+          property: 'access_token',
+          maxAge: 1800,
+          global: true,
+          type: 'Bearer'
+        },
+        refreshToken: {
+          property: 'refresh_token',
+          data: 'refresh_token',
+          maxAge: 60 * 60 * 24 * 30
+        },
+        login: { method: 'post' },
+        logout: { method: 'post' },
+        refresh: { method: 'post' },
+        user: { method: 'post' }
+      } as Strategy,
+      auth0: {
+        domain: 'braks-bot-ui.eu.auth0.com',
+        clientId: process.env.AUTH0_CLIENTID
+      }
+    },
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      home: '/'
+    },
+    token: {
+      global: true
     }
   },
 

@@ -24,6 +24,7 @@
   "devDependencies": {
     "@types/node": "^15.3.0",
     "aws-sdk": "^2.907.0",
+    "consola": "^2.15.3",
     "fork-ts-checker-webpack-plugin": "^6.2.9",
     "serverless": "^2.41.2",
     "serverless-dotenv-plugin": "^3.9.0",

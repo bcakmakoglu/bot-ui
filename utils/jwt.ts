@@ -10,8 +10,7 @@ export class Jwt {
   options = {
     algorithm: 'RS256' as Algorithm,
     expiresIn: Number(process.env.REFRESH_INTERVAL || 600) * 1000,
-    issuer: 'braks',
-    audience: 'https://bot-ui.io'
+    issuer: 'braks'
   };
 
   constructor() {
@@ -32,11 +31,7 @@ export class Jwt {
     return decrypted;
   }
 
-  private _expiry() {
-    return Math.floor(Date.now() + this.options.expiresIn);
-  }
-
-  sign(user: Record<string, string>) {
+  sign(user: Record<string, string>, options?: Partial<Jwt['options']>) {
     const claims = {
       sub: user.id,
       name: user.username,
@@ -48,7 +43,7 @@ export class Jwt {
       }
     };
 
-    return { accessToken: sign(claims, this.secret, this.options), expires: this._expiry() };
+    return { token: sign(claims, this.secret, Object.assign(this.options, options)) };
   }
 
   verify = verify;

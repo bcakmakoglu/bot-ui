@@ -18,8 +18,9 @@ input LoginData {
 }
 
 type Token {
+  id : String!
   accessToken : String!
-  expires : Int!
+  refreshToken : String!
 }
 
 type RefreshedToken {

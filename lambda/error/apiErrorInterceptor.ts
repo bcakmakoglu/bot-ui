@@ -1,4 +1,5 @@
 import { ErrorInterceptor, ApiError } from 'ts-lambda-api';
+import consolaGlobalInstance from 'consola';
 import { APIError } from './apiErrors';
 
 export class APIErrorInterceptor extends ErrorInterceptor {
@@ -7,7 +8,7 @@ export class APIErrorInterceptor extends ErrorInterceptor {
   }
 
   async intercept(apiError: ApiError): Promise<any> {
-    console.log(`## ${apiError.error} ##`);
+    consolaGlobalInstance.error(`## ${apiError.error} ##`);
     if (apiError.error instanceof APIError) {
       apiError.response.status(apiError.error.code);
       await apiError.response.send({

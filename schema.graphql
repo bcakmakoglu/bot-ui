@@ -12,7 +12,8 @@ type RefreshedToken {
 
 type Token {
   accessToken: String!
-  expires: Int!
+  id: String!
+  refreshToken: String!
 }
 
 "columns and relationships of \"bots\""
@@ -463,13 +464,13 @@ type users {
   ): bots_aggregate!
   created_at: timestamptz!
   id: uuid!
-  last_seen: timestamptz!
   password: String!
   "A computed field, executes function \"password_matches\""
   pwd_match(
     "input parameters for function \"password_matches\""
     args: password_matches_args!
   ): Boolean
+  refresh_token: String
   username: String!
 }
 
@@ -490,8 +491,8 @@ type users_aggregate_fields {
 type users_max_fields {
   created_at: timestamptz
   id: uuid
-  last_seen: timestamptz
   password: String
+  refresh_token: String
   username: String
 }
 
@@ -499,8 +500,8 @@ type users_max_fields {
 type users_min_fields {
   created_at: timestamptz
   id: uuid
-  last_seen: timestamptz
   password: String
+  refresh_token: String
   username: String
 }
 
@@ -619,9 +620,9 @@ enum users_select_column {
   "column name"
   id
   "column name"
-  last_seen
-  "column name"
   password
+  "column name"
+  refresh_token
   "column name"
   username
 }
@@ -633,9 +634,9 @@ enum users_update_column {
   "column name"
   id
   "column name"
-  last_seen
-  "column name"
   password
+  "column name"
+  refresh_token
   "column name"
   username
 }
@@ -926,8 +927,8 @@ input users_bool_exp {
   bots: bots_bool_exp
   created_at: timestamptz_comparison_exp
   id: uuid_comparison_exp
-  last_seen: timestamptz_comparison_exp
   password: String_comparison_exp
+  refresh_token: String_comparison_exp
   username: String_comparison_exp
 }
 
@@ -936,8 +937,8 @@ input users_insert_input {
   bots: bots_arr_rel_insert_input
   created_at: timestamptz
   id: uuid
-  last_seen: timestamptz
   password: String
+  refresh_token: String
   username: String
 }
 
@@ -945,8 +946,8 @@ input users_insert_input {
 input users_max_order_by {
   created_at: order_by
   id: order_by
-  last_seen: order_by
   password: order_by
+  refresh_token: order_by
   username: order_by
 }
 
@@ -954,8 +955,8 @@ input users_max_order_by {
 input users_min_order_by {
   created_at: order_by
   id: order_by
-  last_seen: order_by
   password: order_by
+  refresh_token: order_by
   username: order_by
 }
 
@@ -977,8 +978,8 @@ input users_order_by {
   bots_aggregate: bots_aggregate_order_by
   created_at: order_by
   id: order_by
-  last_seen: order_by
   password: order_by
+  refresh_token: order_by
   username: order_by
 }
 
@@ -991,8 +992,8 @@ input users_pk_columns_input {
 input users_set_input {
   created_at: timestamptz
   id: uuid
-  last_seen: timestamptz
   password: String
+  refresh_token: String
   username: String
 }
 

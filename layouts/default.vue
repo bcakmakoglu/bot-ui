@@ -42,25 +42,19 @@ import { Component, Vue } from 'nuxt-property-decorator';
   name: 'V2Layout',
   data: () => ({
     stars: false
-  })
+  }),
+  auth: true
 })
 export default class V2Layout extends Vue {
   visibleSidebar: boolean = false;
-  stars: boolean = false;
   links = ['Foo', 'Bar'];
 
   mounted() {
-    this.$sm.startSession();
-  }
-
-  beforeDestroy() {
-    this.$sm.stopSession();
+    console.log(this.$auth);
   }
 
   async logout() {
-    await this.$apolloHelpers.onLogout();
-    await this.$router.replace('/login');
-    await this.$store.dispatch('user/logout');
+    await this.$auth.logout();
   }
 }
 </script>

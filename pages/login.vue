@@ -42,11 +42,13 @@
 import { mdiCancel, mdiCheckOutline } from '@mdi/js';
 import { Component, Vue } from 'nuxt-property-decorator';
 import { timer } from 'rxjs';
+import consolaGlobalInstance from 'consola';
 
 @Component({
   name: 'LoginForm',
   layout: 'login',
-  transition: 'default'
+  transition: 'default',
+  auth: false
 })
 export default class LoginForm extends Vue {
   cancel = mdiCancel;
@@ -59,6 +61,10 @@ export default class LoginForm extends Vue {
   loading = false;
   success = false;
 
+  mounted() {
+    console.log(this.$auth);
+  }
+
   get disabled() {
     return this.error || this.password === '' || this.username === '';
   }
@@ -66,14 +72,20 @@ export default class LoginForm extends Vue {
   async submit() {
     this.loading = true;
     try {
-      const login = await this.$sm.login(this.username, this.password);
-      if (login) {
+      const login = await this.$auth.loginWith('hasura', {
+        data: {
+          username: this.username,
+          password: this.password
+        }
+      });
+
+      if (login && login?.status === 200) {
         this.loading = false;
         this.success = true;
         return timer(1000).subscribe(async () => await this.$router.replace('/'));
       }
     } catch (e) {
-      console.log(e);
+      consolaGlobalInstance.debug(e);
     }
     this.error = true;
     this.loading = false;

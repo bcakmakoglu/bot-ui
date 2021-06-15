@@ -7,4 +7,11 @@ export const NuxtBuildModules = [
   'nuxt-purgecss'
 ];
 
-export const NuxtModules = ['@nuxtjs/proxy', '@nuxtjs/apollo', '@nuxtjs/toast', 'nuxt-webfontloader'];
+export const NuxtModules = [
+  '@nuxtjs/proxy',
+  '@nuxtjs/apollo',
+  '@nuxtjs/toast',
+  'nuxt-webfontloader',
+  '@nuxtjs/axios',
+  '@nuxtjs/auth-next'
+];

@@ -14,6 +14,7 @@ import parse from 'destr';
 import { gql } from 'graphql-tag';
 import { execute, makePromise } from 'apollo-link';
 import { AccessDeniedError } from '@/error';
+import consolaGlobalInstance from 'consola';
 import link from '~/utils/httplink';
 import { Jwt } from '~/utils/jwt';
 
@@ -71,16 +72,20 @@ export class AuthController extends Controller {
       if (result.data?.users.length) {
         const user = result.data.users[0];
         if (user.pwd_match) {
-          const { accessToken, expires } = this.jwt.sign(user);
-          // For safety we'll try to verify the JWT after signing
-          this.jwt.verify(accessToken, this.jwt.public);
-          await this._updateLastSeen(user.id);
-          console.log(`Authentication successful! Logged in as ${user.username}`);
-          return this.response.status(200).send({ accessToken, expires });
+          const access = this.jwt.sign(user);
+          const refresh = this.jwt.sign(user, { expiresIn: 6000 });
+          await this._saveRefreshTokenHash(user.id, refresh.token);
+
+          consolaGlobalInstance.success(`Authentication successful! Logged in as ${user.username}`);
+          return this.response.status(200).send({
+            id: user.id,
+            accessToken: access.token,
+            refreshToken: refresh.token
+          });
         }
       }
     } catch (e) {
-      console.log(`Authentication error: ${e.message}`);
+      consolaGlobalInstance.fatal(`Authentication error: ${e.message}`);
     }
     throw new AccessDeniedError('Authentication failed.');
   }
@@ -99,9 +104,9 @@ export class AuthController extends Controller {
     description: 'Could not refresh JWT.'
   })
   async refresh(@body payload: any) {
-    const token = this.request.headers.authorization?.split(' ');
+    const currentToken = this.request.headers.authorization?.split(' ')[1];
     const id = payload.session_variables['x-hasura-user-id'];
-    if (!token || !id) throw new AccessDeniedError('No JWT token found or invalid user-id provided.');
+    if (!currentToken || !id) throw new AccessDeniedError('No JWT token found or invalid user-id provided.');
 
     const options = {
       query: gql`
@@ -109,7 +114,7 @@ export class AuthController extends Controller {
           users_by_pk(id: $id) {
             id
             username
-            last_seen
+            refresh_token
           }
         }
       `,
@@ -126,10 +131,9 @@ export class AuthController extends Controller {
         // If last JWT refresh was an hour ago we will have to decline refresh and log the user out
         const expirationTimeframe = 60 * 60 * 1000;
         if (Date.now() - Date.parse(user.last_seen) <= expirationTimeframe) {
-          this.jwt.verify(token[1], this.jwt.public);
-          const { accessToken, expires } = this.jwt.sign(user);
-          await this._updateLastSeen(id);
-          return this.response.status(200).send({ accessToken, expires });
+          this.jwt.verify(currentToken, this.jwt.public);
+          const access = this.jwt.sign(user);
+          return this.response.status(200).send({ accessToken: access.token });
         }
       }
     } catch (e) {
@@ -138,26 +142,27 @@ export class AuthController extends Controller {
     throw new AccessDeniedError('Could not refresh JWT.');
   }
 
-  private async _updateLastSeen(id: string) {
+  private async _saveRefreshTokenHash(id: string, token: string) {
     const options = {
       query: gql`
-        mutation ($id: uuid!, $timestamp: timestamptz!) {
-          update_users_by_pk(_set: { last_seen: $timestamp }, pk_columns: { id: $id }) {
+        mutation ($id: uuid!, $token: String!) {
+          update_users_by_pk(_set: { refresh_token: $token }, pk_columns: { id: $id }) {
             id
           }
         }
       `,
       variables: {
         id,
-        timestamp: new Date().toISOString()
+        token
       },
       ...this.options
     };
+
     try {
       return await makePromise(execute(link, options));
     } catch (e) {
-      console.log('Refreshing last_seen value failed', e);
+      console.log('Saving token hash failed', e);
     }
-    throw new AccessDeniedError('Could not update last_seen value.');
+    throw new AccessDeniedError('Could not update refresh token.');
   }
 }

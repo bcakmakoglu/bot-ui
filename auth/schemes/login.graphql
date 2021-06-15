@@ -1,0 +1,7 @@
+mutation ($data: LoginData!) {
+  login(data: $data) {
+    id,
+    accessToken
+    refreshToken
+  }
+}

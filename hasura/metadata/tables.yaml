@@ -116,3 +116,15 @@
         schema: public
         name: password_matches
     comment: ""
+  select_permissions:
+  - role: user
+    permission:
+      columns:
+      - created_at
+      - id
+      - refresh_token
+      - username
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      limit: 1

@@ -30,13 +30,11 @@ function storage(req: Record<string, any>, res: any) {
 }
 
 const persistedStatePlugin: Plugin = ({ store, req, res }) => {
-  if (req && req.headers) {
-    createPersistedState({
-      key: 'storage',
-      paths: ['user'],
-      storage: storage(req, res)
-    })(store);
-  }
+  createPersistedState({
+    key: 'storage',
+    paths: ['user'],
+    storage: storage(req, res)
+  })(store);
 };
 
 export default persistedStatePlugin;
