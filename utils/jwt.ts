@@ -1,5 +1,5 @@
 import { createDecipheriv, Decipher } from 'crypto';
-import { sign, verify, Algorithm, VerifyOptions } from 'jsonwebtoken';
+import { sign, verify, Algorithm } from 'jsonwebtoken';
 import { injectable } from 'inversify';
 import AuthConfig from '../config/auth';
 
@@ -52,17 +52,6 @@ export class Jwt {
   }
 
   verify = verify;
-
-  refresh(token: string, refreshOptions?: { verify: VerifyOptions }) {
-    const payload = verify(token, this.public, refreshOptions?.verify) as Record<string, unknown>;
-    delete payload.iat;
-    delete payload.exp;
-    delete payload.nbf;
-    delete payload.jti;
-    delete payload.aud;
-    // The first signing converted all needed options into claims, they are already in the payload
-    return { accessToken: sign(payload, this.secret), expires: this._expiry() };
-  }
 }
 
 export const JsonWebToken = new Jwt();

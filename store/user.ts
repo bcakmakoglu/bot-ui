@@ -12,8 +12,8 @@ const state = (): User => ({
   id: '0',
   username: 'John Doe',
   roles: ['user'],
-  lastRefresh: new Date(),
-  expiry: new Date()
+  lastRefresh: undefined,
+  expiry: undefined
 });
 
 @Module({

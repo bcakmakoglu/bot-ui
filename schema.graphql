@@ -12,6 +12,7 @@ type RefreshedToken {
 
 type Token {
   accessToken: String!
+  expires: Int!
 }
 
 "columns and relationships of \"bots\""
@@ -214,7 +215,7 @@ type mutation_root {
   "perform the action: \"login\""
   login(data: LoginData!): Token
   "perform the action: \"refreshToken\""
-  refreshToken: RefreshedToken
+  refreshToken: Token
   "update data of the table: \"bots\""
   update_bots(
     "sets the columns of the filtered rows to the given values"

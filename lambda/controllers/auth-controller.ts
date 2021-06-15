@@ -98,15 +98,17 @@ export class AuthController extends Controller {
     class: AccessDeniedError,
     description: 'Could not refresh JWT.'
   })
-  async refresh() {
+  async refresh(@body payload: any) {
     const token = this.request.headers.authorization?.split(' ');
-    const id = this.request.headers['x-hasura-user-id'];
+    const id = payload.session_variables['x-hasura-user-id'];
     if (!token || !id) throw new AccessDeniedError('No JWT token found or invalid user-id provided.');
 
     const options = {
       query: gql`
         query ($id: uuid!) {
           users_by_pk(id: $id) {
+            id
+            username
             last_seen
           }
         }
@@ -123,13 +125,9 @@ export class AuthController extends Controller {
         const user = result.data.users_by_pk;
         // If last JWT refresh was an hour ago we will have to decline refresh and log the user out
         const expirationTimeframe = 60 * 60 * 1000;
-        if (Date.now() - new Date(user.last_seen).getMilliseconds() <= expirationTimeframe) {
-          const { accessToken, expires } = this.jwt.refresh(token[1], {
-            verify: {
-              audience: this.jwt.options.audience,
-              issuer: this.jwt.options.issuer
-            }
-          });
+        if (Date.now() - Date.parse(user.last_seen) <= expirationTimeframe) {
+          this.jwt.verify(token[1], this.jwt.public);
+          const { accessToken, expires } = this.jwt.sign(user);
           await this._updateLastSeen(id);
           return this.response.status(200).send({ accessToken, expires });
         }

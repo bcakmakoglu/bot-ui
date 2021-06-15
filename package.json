@@ -4,10 +4,10 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "dev": "bash -c 'yarn lambda & nuxt'",
+    "dev": "nuxt & yarn lambda",
     "build": "nuxt build",
     "start": "nuxt start",
-    "lambda": "cd lambda && sls offline start --stage dev --useWorkerThreads --noPrependStageInUrl --printOutput --config serverless.dev.yml",
+    "lambda": "yarn --cwd lambda watch",
     "deploy": "serverless deploy",
     "generate": "nuxt generate",
     "generate-types": "graphql-codegen --config codegen.yml -r dotenv/config",
@@ -66,5 +66,8 @@
     "ts-jest": "^26.5.4",
     "tsconfig-paths-webpack-plugin": "^3.5.1",
     "vue-jest": "^3.0.4"
+  },
+  "resolutions": {
+    "@nuxtjs/vuetify/**/sass": "1.32.12"
   }
 }

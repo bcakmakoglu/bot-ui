@@ -4,7 +4,7 @@ import { Store } from 'vuex';
 import { Toasted } from 'vue-toasted/types';
 import { Context } from '@nuxt/types';
 import { ApolloClient } from 'apollo-client';
-import refreshToken from './refresh_token.graphql';
+import refresh_token from './refresh_token.graphql';
 import login from './login.graphql';
 
 export class SessionManager {
@@ -35,9 +35,13 @@ export class SessionManager {
     this.endpoint = endpoint;
   }
 
-  async login(username: string, password: string): Promise<boolean> {
+  async login(username: string, password: string) {
     try {
-      const options = {
+      const {
+        data: {
+          login: { accessToken, expires }
+        }
+      } = await this.$apollo.mutate({
         mutation: login,
         variables: {
           data: {
@@ -45,12 +49,7 @@ export class SessionManager {
             password
           }
         }
-      };
-      const {
-        data: {
-          login: { accessToken, expires }
-        }
-      } = await this.$apollo.mutate(options);
+      });
       await this.$store.dispatch('user/login', { id: '0', username, roles: ['user'], expires });
       await this.$apolloHelpers.onLogin(accessToken);
       return true;
@@ -61,37 +60,34 @@ export class SessionManager {
     return false;
   }
 
-  startSession() {
-    const expiry = this.refreshInterval * 1000;
-    const lastRefreshDif = this.$store.getters['user/me'].lastRefresh - Date.now() - expiry;
+  startSession = () => {
+    const expiry = this.$store.getters['user/me'].expires;
+    const lastRefreshDif = (this.$store.getters['user/me'].lastRefresh || Date.now()) - Date.now() - expiry;
     const start = lastRefreshDif < expiry && lastRefreshDif > 0 ? lastRefreshDif : expiry;
-    this.refreshSub = timer(start, expiry).subscribe(() => this.refreshSession());
+    this.refreshSub = timer(start).subscribe(async () => {
+      await this.refreshSession();
+      this.startSession();
+    });
     return this;
-  }
+  };
 
   stopSession() {
     this.refreshSub?.unsubscribe();
     return this;
   }
 
-  async refreshSession() {
+  refreshSession = async () => {
     try {
-      const options = {
-        mutation: refreshToken,
-        context: {
-          headers: {
-            authorization: `Bearer ${this.$apolloHelpers.getToken()}`
-          }
-        }
-      };
       const {
         data: {
-          refresh_token: { accessToken, expires }
+          refreshToken: { accessToken, expires }
         }
-      } = await this.$apollo.mutate(options);
+      } = await this.$apollo.mutate({
+        mutation: refresh_token
+      });
       if (accessToken) {
-        this.$store.commit('user/refresh');
-        this.$store.commit('user/expiry', expires);
+        await this.$store.dispatch('user/refresh');
+        await this.$store.dispatch('user/expiry', expires);
         return this.$apolloHelpers.onLogin(accessToken);
       }
     } catch (e) {
@@ -99,7 +95,8 @@ export class SessionManager {
     }
 
     this.$toast.error('There was an issue. We will have to log you out, sorry.');
+    this.stopSession();
     await this.$apolloHelpers.onLogout();
     await this.redirect('/login');
-  }
+  };
 }

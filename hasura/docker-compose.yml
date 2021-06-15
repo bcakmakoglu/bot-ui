@@ -30,9 +30,7 @@ services:
       HASURA_GRAPHQL_JWT_SECRET: '{
       "type": "RS256",
       "key": "-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEArOAO7xvJIAqTi9g3HcrZ\nj4dfr1wXfDQSwyAKYYOR/BABM1aOV5OJTgsC5ThfDCA+5IOAa9cbfJq5XwlgRY3O\nblyDmi+rPydxiCG1hSSA81V/ZVwRKfH8KwOE44xHYAKrNMxbcoL8P5ZWemc6EGXP\nvnimOGsE9vr0G9FjFwotxNdAGJilXfSQAVQzKz0OTExzAFapOd6RhSdJgkYHFdn3\nAJWqOWMBIfx0ipbcKPscsAMAPdMM+kFujcoYD+i2q8kTzxZS2+vIDRA9AF1rR/jU\nq1AvLQDrGdo2jTLOBLR+nMuATETWCAtzfvPJV+Ugb//tMsM8SKGLZxJ4R8OqE3PA\ncdiiFXRvLlq/APOKOa7XfaX+wZxaH+R2gbjJHymQuX0bXzcln5jErDpUsdpjNDWG\nSfAnlYBphuyPD1UzjmqeYWICygoZi0VXy4UDGWZWnzguypKaRD0/ANgbZaUuNOik\nOgTfXHwfuIvMi6CguaWBZHzELj7AoWTeKW1f5qWecSdCWwgafAtNz5lxauJ0B9LY\nEbGfDH30J08w7sxmWJ4KY8pJ/D5mrFJet5xSbDOz8ymmnNJ+SvkebXuxZ9G5EbLR\nb/X3xHSNPwIIC6CnAqgoxq71oM7mh2ry70xazByW1513jIhwMBba9aBkJuOJM4/9\nBTttVS0TB+j2QnUlYxBqLPsCAwEAAQ==\n-----END PUBLIC KEY-----\n",
-      "claims_format": "json",
-      "issuer": "@braks",
-      "audience": ["https://bot-ui-nu.vercel.app/login"]
+      "claims_format": "json"
       }'
 
 
