@@ -28,21 +28,13 @@ $ docker-compose up -d
 ## Environment variables
 | Parameter           | Type          | Default       | Description   |
 | --------------------|---------------|---------------|---------------|  
-| RS256_PUBLIC_KEY    | string        |               | (__required__) Public Key for JWT verification
-| RS256_SECRET_KEY    | string        |               | (__required__) Secret Key for JWT signing
+| ENCRYPTION_KEY      | string        |               | (__required__) Key for JWT encryption
+| ENCRYPTION_IV       | string        |               | (__required__) IV for JWT encryption
 | GRAPHQL_ENDPOINT    | string        |               | (__required__) GraphQL Endpoint (i.e. Hasura Endpoint) http://localhost:8080
-| HASURA_ADMIN_SECRET    | string        |               | (__required__) Deployment stage
+| HASURA_ADMIN_SECRET | string        |               | (__required__) Deployment stage
 | TARGET_STAGE        | string        | "staging"     | (_optional_) Deployment stage
 | SSR                 | boolean       | false         | (_optional_) Enable Server-Side Rendering
 | REFRESH_INTERVAL    | number        | 300           | (_optional_) Session refresh interval
-
-## Docker
-![Docker Image Size (tag)](https://img.shields.io/docker/image-size/bcakmakoglu/bot-api/latest)
-
-The docker compose file contains 3 services:
-1. The Bot UI running on port 8085
-2. Adminer (Database UI) on port 8080
-3. MariaDB on port 3306
 
 #
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/bcakmakoglu/bot-ui)
