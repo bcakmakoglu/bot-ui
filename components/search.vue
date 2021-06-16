@@ -21,8 +21,7 @@
         v-model="query"
         class="
           border border-gray-100
-          focus:outline-none
-          focus:border-brand
+          focus:outline-none focus:border-brand
           rounded-full
           w-full
           text-sm
