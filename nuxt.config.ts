@@ -1,6 +1,13 @@
 import type { NuxtConfig } from '@nuxt/types';
-import { Strategy } from '@nuxtjs/auth-next';
-import { NuxtBuildConfig, NuxtBuildModules, NuxtModules, NuxtHeaderConfig, NuxtRouterConfig, NuxtToasterConfig } from './config';
+import {
+  NuxtBuildConfig,
+  NuxtBuildModules,
+  NuxtModules,
+  NuxtHeaderConfig,
+  NuxtToasterConfig,
+  PurgeCssConfig,
+  NuxtAuthConfig
+} from './config';
 
 const dev = process.env.TARGET_STAGE === 'dev' || false;
 const ssr = process.env.SSR === 'true' || false;
@@ -47,7 +54,12 @@ const config = {
   build: NuxtBuildConfig,
 
   // Vue-Router Configuration
-  router: NuxtRouterConfig,
+  router: {
+    base: '/',
+    routeNameSplitter: '/',
+    mode: 'history',
+    middleware: 'auth'
+  },
 
   layoutTransition: {
     name: 'default',
@@ -110,33 +122,7 @@ const config = {
     defaultAssets: false
   } as any,
 
-  purgeCSS: {
-    mode: 'webpack',
-    enabled: !dev,
-    whitelistPatterns: () => [
-      /^v-((?!application).)*$/,
-      /^\.theme--dark*/,
-      /.*-transition/,
-      /.*-fade/,
-      /.*-slide/,
-      /col*/,
-      /row*/
-    ],
-    paths: [
-      'node_modules/@nuxtjs/vuetify/**/*.ts',
-      'node_modules/@nuxt/vue-app/template/**/*.html',
-      'node_modules/@nuxt/vue-app/template/**/*.vue'
-    ],
-    whitelistPatternsChildren: [/^v-((?!application).)*$/, /^theme--dark*/],
-    styleExtensions: ['.css'],
-    whitelist: ['body', 'html', 'nuxt-progress', 'v-card', 'v-application', 'v-application--wrap'],
-    extractors: [
-      {
-        extractor: (content) => content.match(/[A-z0-9-:\\/]+/g) || [],
-        extensions: ['html', 'vue', 'js']
-      }
-    ]
-  },
+  purgeCSS: PurgeCssConfig,
 
   webfontloader: {
     google: {
@@ -148,43 +134,7 @@ const config = {
     baseURL: process.env.GRAPHQL_ENDPOINT // Used as fallback if no runtime config is provided
   },
 
-  auth: {
-    defaultStrategy: 'hasura',
-    strategies: {
-      hasura: {
-        enabled: true,
-        name: 'hasura',
-        scheme: '~/auth/schemes/hasura-scheme',
-        token: {
-          property: 'access_token',
-          maxAge: 1800,
-          global: true,
-          type: 'Bearer'
-        },
-        refreshToken: {
-          property: 'refresh_token',
-          data: 'refresh_token',
-          maxAge: 60 * 60 * 24 * 30
-        },
-        login: { method: 'post' },
-        logout: { method: 'post' },
-        refresh: { method: 'post' },
-        user: { method: 'post' }
-      } as Strategy,
-      auth0: {
-        domain: 'braks-bot-ui.eu.auth0.com',
-        clientId: process.env.AUTH0_CLIENTID
-      }
-    },
-    redirect: {
-      login: '/login',
-      logout: '/login',
-      home: '/'
-    },
-    token: {
-      global: true
-    }
-  },
+  auth: NuxtAuthConfig,
 
   sentry: {
     dsn: process.env.SENTRY_DSN,
