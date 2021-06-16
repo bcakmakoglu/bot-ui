@@ -50,7 +50,7 @@ export default class V2Layout extends Vue {
   links = ['Foo', 'Bar'];
 
   mounted() {
-    console.log(this.$auth);
+    this.$auth.refreshTokens();
   }
 
   async logout() {

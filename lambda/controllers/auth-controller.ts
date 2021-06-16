@@ -128,13 +128,9 @@ export class AuthController extends Controller {
 
       if (result.data?.users_by_pk) {
         const user = result.data.users_by_pk;
-        // If last JWT refresh was an hour ago we will have to decline refresh and log the user out
-        const expirationTimeframe = 60 * 60 * 1000;
-        if (Date.now() - Date.parse(user.last_seen) <= expirationTimeframe) {
-          this.jwt.verify(currentToken, this.jwt.public);
-          const access = this.jwt.sign(user);
-          return this.response.status(200).send({ accessToken: access.token });
-        }
+        this.jwt.verify(currentToken, this.jwt.public);
+        const access = this.jwt.sign(user);
+        return this.response.status(200).send({ accessToken: access.token });
       }
     } catch (e) {
       console.log(e);

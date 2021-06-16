@@ -61,10 +61,6 @@ export default class LoginForm extends Vue {
   loading = false;
   success = false;
 
-  mounted() {
-    console.log(this.$auth);
-  }
-
   get disabled() {
     return this.error || this.password === '' || this.username === '';
   }

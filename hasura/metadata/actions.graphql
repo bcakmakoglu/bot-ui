@@ -6,7 +6,7 @@ type Mutation {
 
 
 type Mutation {
-  refreshToken : Token
+  refreshToken : RefreshedToken
 }
 
 
