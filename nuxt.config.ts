@@ -146,6 +146,15 @@ const config = {
     google: {
       families: ['Roboto']
     }
+  },
+
+  pwa: {
+    icon: false, // disables the icon module
+    manifest: {
+      name: 'Braks Bot UI',
+      lang: 'en',
+      useWebmanifestExtension: false
+    }
   }
 } as NuxtConfig;
 
