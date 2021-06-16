@@ -133,9 +133,51 @@ export class AuthController extends Controller {
         return this.response.status(200).send({ accessToken: access.token });
       }
     } catch (e) {
-      console.log(e);
+      consolaGlobalInstance.fatal(e);
     }
     throw new AccessDeniedError('Could not refresh JWT.');
+  }
+
+  @POST('/logout')
+  @apiRequest({
+    class: () => {},
+    description: 'Log user out'
+  })
+  @apiResponse(200, {
+    class: () => ({}),
+    description: 'User successfully logged out. Refresh token hash cleared.'
+  })
+  @apiResponse(403, {
+    class: AccessDeniedError,
+    description: 'Logout failed.'
+  })
+  async logout(@body payload: any) {
+    const id = payload.session_variables['x-hasura-user-id'];
+
+    const options = {
+      query: gql`
+        mutation ($id: uuid!) {
+          update_users_by_pk(_set: { refresh_token: null }, pk_columns: { id: $id }) {
+            id
+          }
+        }
+      `,
+      variables: {
+        id
+      },
+      ...this.options
+    };
+
+    try {
+      const result = await makePromise(execute(link, options));
+      if (result) {
+        return this.response.status(200).send({ success: Boolean(result) });
+      }
+    } catch (e) {
+      consolaGlobalInstance.fatal(e);
+    }
+
+    throw new AccessDeniedError('Logout failed.');
   }
 
   private async _saveRefreshTokenHash(id: string, token: string) {

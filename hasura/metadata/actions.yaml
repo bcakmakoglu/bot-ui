@@ -6,6 +6,13 @@ actions:
     forward_client_headers: true
   permissions:
   - role: guest
+- name: logout
+  definition:
+    kind: ""
+    handler: '{{ACTION_BASE_URL}}/auth/logout'
+    forward_client_headers: true
+  permissions:
+  - role: user
 - name: refreshToken
   definition:
     kind: synchronous
@@ -20,4 +27,5 @@ custom_types:
   objects:
   - name: Token
   - name: RefreshedToken
+  - name: LogoutResult
   scalars: []

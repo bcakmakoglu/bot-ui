@@ -9,7 +9,7 @@
         </v-tab>
       </v-tabs>
 
-      <v-avatar class="hidden-sm-and-down" color="grey darken-1 shrink" size="32"></v-avatar>
+      <v-avatar class="hidden-sm-and-down" color="grey darken-1 shrink" size="32" @click="logout"></v-avatar>
     </v-app-bar>
 
     <v-main>

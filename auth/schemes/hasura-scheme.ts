@@ -3,6 +3,7 @@ import { HTTPResponse } from '@nuxtjs/auth-next';
 import { ApolloClient } from 'apollo-client';
 import consolaGlobalInstance from 'consola';
 import login from './login.graphql';
+import logout from './logout.graphql';
 import refresh_token from './refresh_token.graphql';
 import get_user from './get_user.graphql';
 
@@ -104,10 +105,24 @@ export default class HasuraScheme extends RefreshScheme {
   }
 
   async logout(): Promise<void> {
-    consolaGlobalInstance.debug('Logging out user', this.$auth.user);
-    this.$auth.$storage.removeUniversal('user');
-    await this.$auth.ctx.$apolloHelpers.onLogout();
-    await super.logout();
-    super.reset();
+    if (this.$auth.loggedIn) {
+      consolaGlobalInstance.debug('Logging out user', this.$auth.user);
+      const {
+        data: {
+          logout: { success }
+        }
+      } = await this.$apollo.query({
+        query: logout
+      });
+      if (success) {
+        this.$auth.ctx.$toast.success('You have been successfully logged out! See you next time.');
+      } else {
+        this.$auth.ctx.$toast.error('There was an issue but you will still be logged out. Bye!');
+      }
+      this.$auth.$storage.removeUniversal('user');
+      await this.$auth.ctx.$apolloHelpers.onLogout();
+      await super.logout();
+      super.reset();
+    }
   }
 }

@@ -5,6 +5,11 @@ type Mutation {
 }
 
 
+type Query {
+  logout : LogoutResult
+}
+
+
 type Mutation {
   refreshToken : RefreshedToken
 }
@@ -25,5 +30,9 @@ type Token {
 
 type RefreshedToken {
   accessToken : String!
+}
+
+type LogoutResult {
+  success : Boolean!
 }
 

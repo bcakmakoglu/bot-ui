@@ -6,6 +6,10 @@ schema {
   subscription: subscription_root
 }
 
+type LogoutResult {
+  success: Boolean!
+}
+
 type RefreshedToken {
   accessToken: String!
 }
@@ -216,7 +220,7 @@ type mutation_root {
   "perform the action: \"login\""
   login(data: LoginData!): Token
   "perform the action: \"refreshToken\""
-  refreshToken: Token
+  refreshToken: RefreshedToken
   "update data of the table: \"bots\""
   update_bots(
     "sets the columns of the filtered rows to the given values"
@@ -316,6 +320,8 @@ type query_root {
   ): interactions_aggregate!
   "fetch data from the table: \"interactions\" using primary key columns"
   interactions_by_pk(id: uuid!): interactions
+  "perform the action: \"logout\""
+  logout: LogoutResult
   "fetch data from the table: \"users\""
   users(
     "distinct select on columns"
@@ -404,6 +410,8 @@ type subscription_root {
   ): interactions_aggregate!
   "fetch data from the table: \"interactions\" using primary key columns"
   interactions_by_pk(id: uuid!): interactions
+  "perform the action: \"logout\""
+  logout: LogoutResult
   "fetch data from the table: \"users\""
   users(
     "distinct select on columns"
