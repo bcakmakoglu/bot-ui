@@ -78,7 +78,10 @@ export default class HasuraScheme extends RefreshScheme {
   async fetchUser() {
     // Token is required but not available
     if (!this.check().valid) {
-      return this.logout();
+      if (this.$auth.loggedIn) {
+        return this.logout();
+      }
+      return;
     }
 
     const {
@@ -101,7 +104,7 @@ export default class HasuraScheme extends RefreshScheme {
   }
 
   async logout(): Promise<void> {
-    consolaGlobalInstance.info('Logging out!', this.$auth.user);
+    consolaGlobalInstance.debug('Logging out user', this.$auth.user);
     this.$auth.$storage.removeUniversal('user');
     await this.$auth.ctx.$apolloHelpers.onLogout();
     await super.logout();
