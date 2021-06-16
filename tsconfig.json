@@ -33,7 +33,7 @@
       "@nuxt/types",
       "@nuxtjs/auth-next",
       "@nuxtjs/apollo/types",
-      "nuxtjs/sentry",
+      "@nuxtjs/sentry",
       "@nuxtjs/toast",
       "@vercel/node",
       "@nuxtjs/vuetify"

@@ -1,4 +1,5 @@
 import type { NuxtConfig } from '@nuxt/types';
+import { ModuleConfiguration } from '@nuxtjs/sentry/types';
 import {
   NuxtBuildConfig,
   NuxtBuildModules,
@@ -137,8 +138,20 @@ const config = {
 
   sentry: {
     dsn: process.env.SENTRY_DSN,
-    lazy: true
-  },
+    lazy: true,
+    tracing: {
+      tracesSampleRate: 1.0,
+      vueOptions: {
+        tracing: true,
+        tracingOptions: {
+          hooks: ['mount', 'update'],
+          timeout: 2000,
+          trackComponents: true
+        }
+      }
+    },
+    environment: process.env.TARGET_STAGE
+  } as ModuleConfiguration,
 
   pwa: {
     icon: false, // disables the icon module
